@@ -16,10 +16,10 @@ from prediction.models import Prediction
 import os
 import pickle
 
-MODEL_PATH = 'C:\\Users\\Minusha Attygala\\Downloads\\diabetes_prediction - Copy\\diabetes_prediction\\prediction\\ml_models\\diabetes_model.pkl'
+# MODEL_PATH = 'C:\\Users\\Minusha Attygala\\Downloads\\diabetes_prediction - Copy\\diabetes_prediction\\prediction\\ml_models\\diabetes_model.pkl'
 
-with open(MODEL_PATH, 'rb') as file:
-    model = pickle.load(file)
+# with open(MODEL_PATH, 'rb') as file:
+#     model = pickle.load(file)
 
 def predict_diabetes(request):
     if request.method == 'POST':
@@ -58,10 +58,12 @@ def about(request):
     """About page view"""
     return render(request, 'prediction/about.html')
 
+@login_required
 def contact(request):
     """Contact page view"""
     return render(request, 'prediction/contact.html')
 
+@login_required
 def prediction_form(request):
     """View for the prediction form"""
     if request.method == 'POST':
@@ -119,6 +121,7 @@ def prediction_form(request):
     return render(request, 'prediction/prediction_form.html', {'form': form})
 
 # Example usage in a view function
+@login_required
 def make_prediction(request):
     if request.method == 'POST':
         form = PredictionForm(request.POST)
@@ -150,18 +153,26 @@ def make_prediction(request):
             # Redirect or render response
             # ...
 
+@login_required
 def prediction_results(request, prediction_id):
     """View for displaying prediction results"""
     prediction = get_object_or_404(PredictionResult, id=prediction_id, user=request.user)
     recommendations = prediction.recommendations.all()
     
+    # Calculate probability as a percentage for template display
+    probability_percentage = 0
+    if prediction.probability is not None:
+        probability_percentage = prediction.probability * 100
+
     context = {
         'prediction': prediction,
-        'recommendations': recommendations
+        'recommendations': recommendations,
+        'probability_percentage': probability_percentage  # Add this to the context
     }
     
     return render(request, 'prediction/results.html', context)
 
+@login_required
 def recommendations(request, prediction_id=None):
     """View for displaying recommendations"""
     if prediction_id:
@@ -185,6 +196,7 @@ def recommendations(request, prediction_id=None):
     
     return render(request, 'prediction/recommendations.html', context)
 
+@login_required
 def upload_sugar_report(request):
     """View for uploading sugar reports"""
     if request.method == 'POST':
@@ -225,6 +237,7 @@ def upload_sugar_report(request):
     
     return render(request, 'prediction/upload_sugar_report.html', context)
 
+@login_required
 def sugar_report_detail(request, report_id):
     """View for displaying sugar report details"""
     report = get_object_or_404(SugarReport, id=report_id, user=request.user)
@@ -235,6 +248,7 @@ def sugar_report_detail(request, report_id):
     
     return render(request, 'prediction/sugar_report_detail.html', context)
 
+@login_required
 def prediction_history(request):
     """View for displaying prediction history"""
     predictions = PredictionResult.objects.filter(user=request.user).order_by('-created_at')
@@ -249,6 +263,7 @@ def prediction_history(request):
     return render(request, 'prediction/prediction_history.html', context)
 
 @require_POST
+@login_required
 def delete_prediction(request, prediction_id):
     """View for deleting a prediction"""
     prediction = get_object_or_404(PredictionResult, id=prediction_id, user=request.user)
@@ -257,6 +272,7 @@ def delete_prediction(request, prediction_id):
     return redirect('prediction_history')
 
 @require_POST
+@login_required
 def delete_sugar_report(request, report_id):
     """View for deleting a sugar report"""
     report = get_object_or_404(SugarReport, id=report_id, user=request.user)
@@ -264,6 +280,7 @@ def delete_sugar_report(request, report_id):
     messages.success(request, 'Sugar report deleted successfully.')
     return redirect('upload_sugar_report')
 
+@login_required
 def dashboard(request):
     # Get recent predictions
     recent_predictions = Prediction.objects.filter(user=request.user).order_by('-created_at')[:5]

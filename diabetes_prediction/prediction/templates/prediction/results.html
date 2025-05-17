@@ -45,11 +45,11 @@
                             <div class="progress" style="height: 30px;">
                                 <div class="progress-bar {% if prediction.probability < 0.3 %}bg-success{% elif prediction.probability < 0.6 %}bg-warning{% else %}bg-danger{% endif %}" 
                                      role="progressbar" 
-                                     style="width: {{ prediction.probability|floatformat:2|multiply:100 }}%;" 
-                                     aria-valuenow="{{ prediction.probability|floatformat:2|multiply:100 }}" 
+                                     style="width: {{ probability_percentage|floatformat:0 }}%;" 
+                                     aria-valuenow="{{ probability_percentage|floatformat:0 }}" 
                                      aria-valuemin="0" 
                                      aria-valuemax="100">
-                                    {{ prediction.probability|floatformat:2|multiply:100 }}%
+                                    {{ probability_percentage|floatformat:2 }}%
                                 </div>
                             </div>
                         </div>
