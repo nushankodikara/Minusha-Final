@@ -1,0 +1,440 @@
+{% extends 'accounts/base.html' %}
+
+{% block title %}Dashboard - Diabetes Prediction System{% endblock %}
+
+{% block extra_css %}
+<style>
+    .dashboard-card {
+        transition: transform 0.3s ease;
+        border-radius: 8px;
+        border: 1px solid rgba(0,0,0,0.1);
+        height: 100%;
+    }
+    .dashboard-card:hover {
+        transform: translateY(-2px);
+    }
+    .nav-tabs .nav-link {
+        color: #6c757d;
+        border: none;
+        padding: 10px 20px;
+        font-weight: 500;
+    }
+    .nav-tabs .nav-link.active {
+        color: #0d6efd;
+        background: none;
+        border-bottom: 2px solid #0d6efd;
+    }
+    .metric-value {
+        font-size: 1.8rem;
+        font-weight: 600;
+        margin-bottom: 0;
+    }
+    .metric-label {
+        color: #6c757d;
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+    .trend-positive {
+        color: #28a745;
+    }
+    .trend-negative {
+        color: #dc3545;
+    }
+    .activity-item {
+        padding: 12px 0;
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+    .activity-item:last-child {
+        border-bottom: none;
+    }
+    .activity-icon {
+        width: 36px;
+        height: 36px;
+        background-color: rgba(13, 110, 253, 0.1);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+    }
+    .dashboard-action-btn {
+        border-radius: 6px;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+    }
+    .dashboard-action-btn i {
+        margin-right: 6px;
+    }
+    .prediction-history-item {
+        border-left: 4px solid transparent;
+    }
+    .prediction-history-item.positive {
+        border-left-color: #dc3545;
+    }
+    .prediction-history-item.negative {
+        border-left-color: #28a745;
+    }
+    .profile-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+    .profile-image {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-right: 15px;
+    }
+    .profile-info h5 {
+        margin-bottom: 5px;
+    }
+    .profile-stats {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 15px;
+    }
+    .stat-item {
+        text-align: center;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="fw-bold">Dashboard</h1>
+            <p class="text-muted mb-0">Monitor your health metrics and track your progress</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{% url 'upload_meal' %}" class="btn btn-light dashboard-action-btn">
+                <i class="bi bi-cloud-arrow-up"></i> Upload Data
+            </a>
+            <a href="{% url 'prediction_form' %}" class="btn btn-primary dashboard-action-btn">
+                <i class="bi bi-activity"></i> New Assessment
+            </a>
+        </div>
+    </div>
+    
+    <!-- Profile Summary Card -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+            <div class="profile-header">
+                {% if user.profile.image %}
+                    <img src="{{ user.profile.image.url }}" alt="{{ user.username }}" class="profile-image">
+                {% else %}
+                    <div class="profile-image bg-light d-flex align-items-center justify-content-center">
+                        <i class="bi bi-person text-muted"></i>
+                    </div>
+                {% endif %}
+                <div class="profile-info">
+                    <h5 class="mb-0">Welcome back, {{ user.username }}!</h5>
+                    <p class="text-muted mb-0">{{ user.email }}</p>
+                </div>
+                <div class="ms-auto">
+                    <a href="{% url 'profile' %}" class="btn btn-outline-primary btn-sm">Edit Profile</a>
+                </div>
+            </div>
+            <div class="profile-stats">
+                <div class="stat-item">
+                    <p class="mb-0 fw-bold">{{ predictions_count|default:"0" }}</p>
+                    <small class="text-muted">Assessments</small>
+                </div>
+                <div class="stat-item">
+                    <p class="mb-0 fw-bold">{{ uploads_count|default:"0" }}</p>
+                    <small class="text-muted">Uploads</small>
+                </div>
+                <div class="stat-item">
+                    <p class="mb-0 fw-bold">{{ days_active|default:"0" }}</p>
+                    <small class="text-muted">Days Active</small>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Navigation Tabs -->
+    <ul class="nav nav-tabs mb-4">
+        <li class="nav-item">
+            <a class="nav-link active" href="#">Overview</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">Predictions</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">Uploads</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">Recommendations</a>
+        </li>
+    </ul>
+    
+    <!-- Health Metrics Cards -->
+    <div class="row mb-4">
+        <!-- Current Risk Level -->
+        <div class="col-md-3 mb-3">
+            <div class="dashboard-card p-3">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <span class="metric-label">Current Risk Level</span>
+                    <i class="bi bi-activity text-primary"></i>
+                </div>
+                <h2 class="metric-value text-warning">Medium</h2>
+                <small class="text-muted">Last assessed on May 1, 2025</small>
+            </div>
+        </div>
+        
+        <!-- Current BMI -->
+        <div class="col-md-3 mb-3">
+            <div class="dashboard-card p-3">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <span class="metric-label">Current BMI</span>
+                    <i class="bi bi-bar-chart-line text-primary"></i>
+                </div>
+                <h2 class="metric-value">26.4</h2>
+                <small class="trend-positive"><i class="bi bi-arrow-down-short"></i> -0.8 from last month</small>
+            </div>
+        </div>
+        
+        <!-- Activity Level -->
+        <div class="col-md-3 mb-3">
+            <div class="dashboard-card p-3">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <span class="metric-label">Activity Level</span>
+                    <i class="bi bi-heart-pulse text-primary"></i>
+                </div>
+                <h2 class="metric-value">Moderate</h2>
+                <small class="trend-positive"><i class="bi bi-arrow-up-short"></i> Improved from sedentary</small>
+            </div>
+        </div>
+        
+        <!-- Uploads This Month -->
+        <div class="col-md-3 mb-3">
+            <div class="dashboard-card p-3">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <span class="metric-label">Uploads This Month</span>
+                    <i class="bi bi-folder text-primary"></i>
+                </div>
+                <h2 class="metric-value">7</h2>
+                <small class="text-muted">4 meals, 3 sugar reports</small>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="row">
+        <!-- Health Metrics Over Time -->
+        <div class="col-lg-8 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Health Metrics Over Time</h5>
+                    <div class="d-flex justify-content-center align-items-center" style="height: 250px;">
+                        <p class="text-muted">Chart will appear here with your data</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Recent Activity -->
+        <div class="col-lg-4 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Recent Activity</h5>
+                    
+                    <!-- Activity Item -->
+                    <div class="activity-item d-flex align-items-center">
+                        <div class="activity-icon">
+                            <i class="bi bi-activity text-primary"></i>
+                        </div>
+                        <div>
+                            <p class="mb-0 fw-medium">Completed risk assessment</p>
+                            <small class="text-muted">May 1, 2025</small>
+                        </div>
+                    </div>
+                    
+                    <!-- Activity Item -->
+                    <div class="activity-item d-flex align-items-center">
+                        <div class="activity-icon">
+                            <i class="bi bi-image text-primary"></i>
+                        </div>
+                        <div>
+                            <p class="mb-0 fw-medium">Uploaded meal photo</p>
+                            <small class="text-muted">April 29, 2025</small>
+                        </div>
+                    </div>
+                    
+                    <!-- Activity Item -->
+                    <div class="activity-item d-flex align-items-center">
+                        <div class="activity-icon">
+                            <i class="bi bi-file-medical text-primary"></i>
+                        </div>
+                        <div>
+                            <p class="mb-0 fw-medium">Uploaded sugar report</p>
+                            <small class="text-muted">April 25, 2025</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Prediction History -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header bg-light">
+                    <h2 class="mb-0">Prediction History</h2>
+                </div>
+                <div class="card-body">
+                    {% if predictions %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>BMI</th>
+                                        <th>Weight</th>
+                                        <th>Activity Level</th>
+                                        <th>Result</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for prediction in predictions %}
+                                        <tr class="prediction-history-item {% if prediction.result.is_diabetic %}positive{% else %}negative{% endif %}">
+                                            <td>{{ prediction.date_created|date:"M d, Y" }}</td>
+                                            <td>{{ prediction.bmi|floatformat:1 }}</td>
+                                            <td>{{ prediction.weight }} kg</td>
+                                            <td>{{ prediction.activity_level }}</td>
+                                            <td>
+                                                {% if prediction.result.is_diabetic %}
+                                                    <span class="badge bg-danger">Higher Risk</span>
+                                                {% else %}
+                                                    <span class="badge bg-success">Lower Risk</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <a href="{% url 'prediction_result' prediction.result.id %}" class="btn btn-sm btn-outline-primary">View</a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <p class="text-muted">No prediction history available.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Recent Uploads -->
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card shadow h-100">
+                <div class="card-header bg-light">
+                    <h2 class="mb-0">Recent Meals</h2>
+                </div>
+                <div class="card-body">
+                    {% if meals %}
+                        <div class="row">
+                            {% for meal in meals|slice:":4" %}
+                                <div class="col-6 mb-3">
+                                    <div class="card">
+                                        <img src="{{ meal.image.url }}" class="card-img-top" alt="Meal Photo">
+                                        <div class="card-body">
+                                            <p class="card-text small text-muted">{{ meal.date_uploaded|date:"M d, Y" }}</p>
+                                            {% if meal.description %}
+                                                <p class="card-text small">{{ meal.description|truncatechars:50 }}</p>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        {% if meals.count > 4 %}
+                            <div class="text-center mt-3">
+                                <a href="#" class="btn btn-outline-primary btn-sm">View All Meals</a>
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        <div class="text-center py-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" class="bi bi-camera text-muted mb-3" viewBox="0 0 16 16">
+                                <path d="M15 12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h1.172a3 3 0 0 0 2.12-.879l.83-.828A1 1 0 0 1 6.827 3h2.344a1 1 0 0 1 .707.293l.828.828A3 3 0 0 0 12.828 5H14a1 1 0 0 1 1 1v6zM2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4H2z"/>
+                                <path d="M8 11a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5zm0 1a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM3 6.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0z"/>
+                            </svg>
+                            <p class="text-muted">No meal photos uploaded yet.</p>
+                            <a href="{% url 'upload_meal' %}" class="btn btn-primary btn-sm">Upload Meal</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6 mb-4">
+            <div class="card shadow h-100">
+                <div class="card-header bg-light">
+                    <h2 class="mb-0">Sugar Reports</h2>
+                </div>
+                <div class="card-body">
+                    {% if reports %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Glucose Level</th>
+                                        <th>HbA1c</th>
+                                        <th>File</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for report in reports|slice:":5" %}
+                                        <tr>
+                                            <td>{{ report.date_uploaded|date:"M d, Y" }}</td>
+                                            <td>
+                                                {% if report.glucose_level %}
+                                                    {{ report.glucose_level }} mg/dL
+                                                {% else %}
+                                                    --
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if report.hba1c %}
+                                                    {{ report.hba1c }}%
+                                                {% else %}
+                                                    --
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <a href="{{ report.report_file.url }}" class="btn btn-sm btn-outline-primary" target="_blank">View</a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% if reports.count > 5 %}
+                            <div class="text-center mt-3">
+                                <a href="#" class="btn btn-outline-primary btn-sm">View All Reports</a>
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        <div class="text-center py-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" class="bi bi-file-earmark-medical text-muted mb-3" viewBox="0 0 16 16">
+                                <path d="M7.5 5.5a.5.5 0 0 0-1 0v.634l-.549-.317a.5.5 0 1 0-.5.866L6 7l-.549.317a.5.5 0 1 0 .5.866l.549-.317V8.5a.5.5 0 1 0 1 0v-.634l.549.317a.5.5 0 1 0 .5-.866L8 7l.549-.317a.5.5 0 1 0-.5-.866l-.549.317V5.5zm-2 4.5a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zm0 2a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5z"/>
+                                <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z"/>
+                            </svg>
+                            <p class="text-muted">No sugar reports uploaded yet.</p>
+                            <a href="{% url 'upload_sugar_report' %}" class="btn btn-primary btn-sm">Upload Report</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

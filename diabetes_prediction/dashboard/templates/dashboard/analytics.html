@@ -1,0 +1,840 @@
+{% extends 'accounts/base.html' %}
+{% load static %}
+
+{% block title %}Analytics | Diabetes Prediction System{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+            <div class="position-sticky pt-3">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'dashboard' %}">
+                            <i class="fas fa-home"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'user_management' %}">
+                            <i class="fas fa-users"></i> User Management
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'analytics' %}">
+                            <i class="fas fa-chart-bar"></i> Analytics
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'prediction' %}">
+                            <i class="fas fa-stethoscope"></i> Make Prediction
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'prediction_history' %}">
+                            <i class="fas fa-history"></i> Prediction History
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'profile' %}">
+                            <i class="fas fa-user-circle"></i> Profile
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main content -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">Analytics Dashboard</h1>
+                <div class="btn-toolbar mb-2 mb-md-0">
+                    <div class="btn-group me-2">
+                        <button type="button" class="btn btn-sm btn-outline-secondary" id="exportCSV">Export CSV</button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary" id="exportPDF">Export PDF</button>
+                    </div>
+                    <div class="dropdown">
+                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="timeRangeDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-calendar"></i> Time Range
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="timeRangeDropdown">
+                            <li><a class="dropdown-item time-range" href="#" data-range="7">Last 7 Days</a></li>
+                            <li><a class="dropdown-item time-range" href="#" data-range="30">Last 30 Days</a></li>
+                            <li><a class="dropdown-item time-range" href="#" data-range="90">Last 3 Months</a></li>
+                            <li><a class="dropdown-item time-range" href="#" data-range="365">Last Year</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#customRangeModal">Custom Range</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics Overview Cards -->
+            <div class="row">
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card border-left-primary shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                        Total Predictions</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{ total_predictions }}</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card border-left-success shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                        Prediction Accuracy</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{ model_accuracy|floatformat:2 }}%</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-check-circle fa-2x text-gray-300"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card border-left-info shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                        Positive Rate</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{ positive_rate|floatformat:2 }}%</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-percentage fa-2x text-gray-300"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card border-left-warning shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                        Average Age</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{ avg_age|floatformat:1 }}</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-user-clock fa-2x text-gray-300"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Charts Row -->
+            <div class="row">
+                <!-- Predictions Over Time Chart -->
+                <div class="col-xl-8 col-lg-7">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                            <h6 class="m-0 font-weight-bold text-primary">Predictions Over Time</h6>
+                            <div class="dropdown no-arrow">
+                                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                                    <div class="dropdown-header">Chart Options:</div>
+                                    <a class="dropdown-item" href="#" id="viewDaily">Daily</a>
+                                    <a class="dropdown-item" href="#" id="viewWeekly">Weekly</a>
+                                    <a class="dropdown-item" href="#" id="viewMonthly">Monthly</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-area">
+                                <canvas id="predictionsOverTimeChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Prediction Distribution Pie Chart -->
+                <div class="col-xl-4 col-lg-5">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                            <h6 class="m-0 font-weight-bold text-primary">Prediction Distribution</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-pie pt-4 pb-2">
+                                <canvas id="predictionDistributionChart"></canvas>
+                            </div>
+                            <div class="mt-4 text-center small">
+                                <span class="mr-2">
+                                    <i class="fas fa-circle text-success"></i> Negative
+                                </span>
+                                <span class="mr-2">
+                                    <i class="fas fa-circle text-danger"></i> Positive
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feature Analysis Row -->
+            <div class="row">
+                <!-- Feature Importance Chart -->
+                <div class="col-lg-6 mb-4">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Feature Importance</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-bar">
+                                <canvas id="featureImportanceChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Feature Correlation Heatmap -->
+                <div class="col-lg-6 mb-4">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Feature Correlation</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-area">
+                                <canvas id="correlationHeatmapChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Demographic Analysis Row -->
+            <div class="row">
+                <!-- Age Distribution Chart -->
+                <div class="col-lg-6 mb-4">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Age Distribution</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-bar">
+                                <canvas id="ageDistributionChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BMI vs Glucose Scatter Plot -->
+                <div class="col-lg-6 mb-4">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">BMI vs Glucose</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-scatter">
+                                <canvas id="bmiGlucoseScatterChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Model Performance Metrics -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Model Performance Metrics</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-3 col-md-6 mb-4">
+                            <div class="card bg-primary text-white shadow">
+                                <div class="card-body">
+                                    Accuracy
+                                    <div class="text-white-50 small">{{ model_metrics.accuracy|floatformat:4 }}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 mb-4">
+                            <div class="card bg-success text-white shadow">
+                                <div class="card-body">
+                                    Precision
+                                    <div class="text-white-50 small">{{ model_metrics.precision|floatformat:4 }}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 mb-4">
+                            <div class="card bg-info text-white shadow">
+                                <div class="card-body">
+                                    Recall
+                                    <div class="text-white-50 small">{{ model_metrics.recall|floatformat:4 }}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 mb-4">
+                            <div class="card bg-warning text-white shadow">
+                                <div class="card-body">
+                                    F1 Score
+                                    <div class="text-white-50 small">{{ model_metrics.f1_score|floatformat:4 }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Confusion Matrix -->
+                    <div class="row mt-4">
+                        <div class="col-lg-6">
+                            <h4 class="small font-weight-bold">Confusion Matrix</h4>
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="confusionMatrix" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th>Predicted Negative</th>
+                                            <th>Predicted Positive</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th>Actual Negative</th>
+                                            <td class="bg-success-light">{{ confusion_matrix.tn }}</td>
+                                            <td class="bg-danger-light">{{ confusion_matrix.fp }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Actual Positive</th>
+                                            <td class="bg-danger-light">{{ confusion_matrix.fn }}</td>
+                                            <td class="bg-success-light">{{ confusion_matrix.tp }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <h4 class="small font-weight-bold">ROC Curve</h4>
+                            <div class="chart-area">
+                                <canvas id="rocCurveChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<!-- Custom Range Modal -->
+<div class="modal fade" id="customRangeModal" tabindex="-1" aria-labelledby="customRangeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="customRangeModalLabel">Select Custom Date Range</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="customRangeForm">
+                    <div class="mb-3">
+                        <label for="startDate" class="form-label">Start Date</label>
+                        <input type="date" class="form-control" id="startDate" name="startDate" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="endDate" class="form-label">End Date</label>
+                        <input type="date" class="form-control" id="endDate" name="endDate" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="applyCustomRange">Apply</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+<script>
+    // Chart data from Django context
+    const timeLabels = {{ time_labels|safe }};
+    const predictionData = {{ prediction_data|safe }};
+    const positiveData = {{ positive_data|safe }};
+    const negativeData = {{ negative_data|safe }};
+    const featureNames = {{ feature_names|safe }};
+    const featureImportance = {{ feature_importance|safe }};
+    const ageGroups = {{ age_groups|safe }};
+    const ageDistribution = {{ age_distribution|safe }};
+    const bmiData = {{ bmi_data|safe }};
+    const glucoseData = {{ glucose_data|safe }};
+    const outcomeData = {{ outcome_data|safe }};
+    const rocCurveX = {{ roc_curve_x|safe }};
+    const rocCurveY = {{ roc_curve_y|safe }};
+
+    // Initialize charts when DOM is ready
+    document.addEventListener('DOMContentLoaded', function() {
+        // Predictions Over Time Chart
+        const timeCtx = document.getElementById('predictionsOverTimeChart').getContext('2d');
+        const timeChart = new Chart(timeCtx, {
+            type: 'line',
+            data: {
+                labels: timeLabels,
+                datasets: [
+                    {
+                        label: 'Total Predictions',
+                        data: predictionData,
+                        backgroundColor: 'rgba(78, 115, 223, 0.05)',
+                        borderColor: 'rgba(78, 115, 223, 1)',
+                        pointRadius: 3,
+                        pointBackgroundColor: 'rgba(78, 115, 223, 1)',
+                        pointBorderColor: 'rgba(78, 115, 223, 1)',
+                        pointHoverRadius: 3,
+                        pointHoverBackgroundColor: 'rgba(78, 115, 223, 1)',
+                        pointHoverBorderColor: 'rgba(78, 115, 223, 1)',
+                        pointHitRadius: 10,
+                        pointBorderWidth: 2,
+                        fill: true
+                    },
+                    {
+                        label: 'Positive',
+                        data: positiveData,
+                        backgroundColor: 'rgba(231, 74, 59, 0.05)',
+                        borderColor: 'rgba(231, 74, 59, 1)',
+                        pointRadius: 3,
+                        pointBackgroundColor: 'rgba(231, 74, 59, 1)',
+                        pointBorderColor: 'rgba(231, 74, 59, 1)',
+                        pointHoverRadius: 3,
+                        pointHoverBackgroundColor: 'rgba(231, 74, 59, 1)',
+                        pointHoverBorderColor: 'rgba(231, 74, 59, 1)',
+                        pointHitRadius: 10,
+                        pointBorderWidth: 2,
+                        fill: true
+                    }
+                ]
+            },
+            options: {
+                maintainAspectRatio: false,
+                layout: {
+                    padding: {
+                        left: 10,
+                        right: 25,
+                        top: 25,
+                        bottom: 0
+                    }
+                },
+                scales: {
+                    x: {
+                        time: {
+                            unit: 'date'
+                        },
+                        grid: {
+                            display: false,
+                            drawBorder: false
+                        },
+                        ticks: {
+                            maxTicksLimit: 7
+                        }
+                    },
+                    y: {
+                        ticks: {
+                            maxTicksLimit: 5,
+                            padding: 10,
+                            beginAtZero: true
+                        },
+                        grid: {
+                            color: "rgb(234, 236, 244)",
+                            zeroLineColor: "rgb(234, 236, 244)",
+                            drawBorder: false,
+                            borderDash: [2],
+                            zeroLineBorderDash: [2]
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    },
+                    tooltip: {
+                        backgroundColor: "rgb(255,255,255)",
+                        bodyFontColor: "#858796",
+                        titleMarginBottom: 10,
+                        titleFontColor: '#6e707e',
+                        titleFontSize: 14,
+                        borderColor: '#dddfeb',
+                        borderWidth: 1,
+                        xPadding: 15,
+                        yPadding: 15,
+                        displayColors: false,
+                        intersect: false,
+                        mode: 'index',
+                        caretPadding: 10
+                    }
+                }
+            }
+        });
+
+        // Prediction Distribution Chart
+        const pieCtx = document.getElementById('predictionDistributionChart').getContext('2d');
+        const pieChart = new Chart(pieCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Negative', 'Positive'],
+                datasets: [{
+                    data: [{{ negative_cases }}, {{ positive_cases }}],
+                    backgroundColor: ['#1cc88a', '#e74a3b'],
+                    hoverBackgroundColor: ['#17a673', '#be2617'],
+                    hoverBorderColor: "rgba(234, 236, 244, 1)",
+                }],
+            },
+            options: {
+                maintainAspectRatio: false,
+                plugins: {
+                    tooltip: {
+                        backgroundColor: "rgb(255,255,255)",
+                        bodyFontColor: "#858796",
+                        borderColor: '#dddfeb',
+                        borderWidth: 1,
+                        xPadding: 15,
+                        yPadding: 15,
+                        displayColors: false,
+                        caretPadding: 10,
+                    },
+                    legend: {
+                        display: true,
+                        position: 'bottom'
+                    },
+                    datalabels: {
+                        formatter: (value, ctx) => {
+                            let sum = 0;
+                            let dataArr = ctx.chart.data.datasets[0].data;
+                            dataArr.map(data => {
+                                sum += data;
+                            });
+                            let percentage = (value*100 / sum).toFixed(1)+"%";
+                            return percentage;
+                        },
+                        color: '#fff',
+                        font: {
+                            weight: 'bold',
+                            size: 12
+                        }
+                    }
+                },
+                cutout: '70%',
+            },
+        });
+
+        // Feature Importance Chart
+        const featureCtx = document.getElementById('featureImportanceChart').getContext('2d');
+        const featureChart = new Chart(featureCtx, {
+            type: 'bar',
+            data: {
+                labels: featureNames,
+                datasets: [{
+                    label: 'Importance',
+                    data: featureImportance,
+                    backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Importance'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Feature'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+
+        // Age Distribution Chart
+        const ageCtx = document.getElementById('ageDistributionChart').getContext('2d');
+        const ageChart = new Chart(ageCtx, {
+            type: 'bar',
+            data: {
+                labels: ageGroups,
+                datasets: [{
+                    label: 'Count',
+                    data: ageDistribution,
+                    backgroundColor: 'rgba(75, 192, 192, 0.7)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Number of Patients'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Age Group'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+
+        // BMI vs Glucose Scatter Chart
+        const scatterCtx = document.getElementById('bmiGlucoseScatterChart').getContext('2d');
+        
+        // Create datasets for positive and negative outcomes
+        const positivePoints = [];
+        const negativePoints = [];
+        
+        for (let i = 0; i < bmiData.length; i++) {
+            const point = {
+                x: bmiData[i],
+                y: glucoseData[i]
+            };
+            
+            if (outcomeData[i] === 1) {
+                positivePoints.push(point);
+            } else {
+                negativePoints.push(point);
+            }
+        }
+        
+        const scatterChart = new Chart(scatterCtx, {
+            type: 'scatter',
+            data: {
+                datasets: [
+                    {
+                        label: 'Negative',
+                        data: negativePoints,
+                        backgroundColor: 'rgba(28, 200, 138, 0.7)',
+                        pointRadius: 5,
+                        pointHoverRadius: 7
+                    },
+                    {
+                        label: 'Positive',
+                        data: positivePoints,
+                        backgroundColor: 'rgba(231, 74, 59, 0.7)',
+                        pointRadius: 5,
+                        pointHoverRadius: 7
+                    }
+                ]
+            },
+            options: {
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'BMI'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Glucose'
+                        }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `BMI: ${context.parsed.x}, Glucose: ${context.parsed.y}`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // ROC Curve Chart
+        const rocCtx = document.getElementById('rocCurveChart').getContext('2d');
+        const rocChart = new Chart(rocCtx, {
+            type: 'line',
+            data: {
+                labels: rocCurveX,
+                datasets: [{
+                    label: 'ROC Curve (AUC = {{ roc_auc|floatformat:3 }})',
+                    data: rocCurveY,
+                    fill: false,
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    tension: 0.1,
+                    pointRadius: 0
+                },
+                {
+                    label: 'Random Classifier',
+                    data: rocCurveX,
+                    fill: false,
+                    borderColor: 'rgba(128, 128, 128, 0.7)',
+                    borderDash: [5, 5],
+                    tension: 0,
+                    pointRadius: 0
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'False Positive Rate'
+                        },
+                        min: 0,
+                        max: 1
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'True Positive Rate'
+                        },
+                        min: 0,
+                        max: 1
+                    }
+                }
+            }
+        });
+
+        // Event listeners for time range selection
+        document.querySelectorAll('.time-range').forEach(item => {
+            item.addEventListener('click', event => {
+                event.preventDefault();
+                const days = event.target.getAttribute('data-range');
+                updateTimeRange(days);
+            });
+        });
+
+        // Custom range application
+        document.getElementById('applyCustomRange').addEventListener('click', function() {
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            
+            if (startDate && endDate) {
+                applyCustomRange(startDate, endDate);
+                $('#customRangeModal').modal('hide');
+            }
+        });
+
+        // Export buttons
+        document.getElementById('exportCSV').addEventListener('click', function() {
+            exportData('csv');
+        });
+
+        document.getElementById('exportPDF').addEventListener('click', function() {
+            exportData('pdf');
+        });
+
+        // View options for time chart
+        document.getElementById('viewDaily').addEventListener('click', function(e) {
+            e.preventDefault();
+            changeTimeView('daily');
+        });
+
+        document.getElementById('viewWeekly').addEventListener('click', function(e) {
+            e.preventDefault();
+            changeTimeView('weekly');
+        });
+
+        document.getElementById('viewMonthly').addEventListener('click', function(e) {
+            e.preventDefault();
+            changeTimeView('monthly');
+        });
+    });
+
+    // Function to update time range
+    function updateTimeRange(days) {
+        // This would be an AJAX call to get new data
+        fetch(`/api/analytics/time-range?days=${days}`)
+            .then(response => response.json())
+            .then(data => {
+                // Update charts with new data
+                updateCharts(data);
+            })
+            .catch(error => console.error('Error fetching time range data:', error));
+    }
+
+    // Function to apply custom date range
+    function applyCustomRange(startDate, endDate) {
+        // This would be an AJAX call to get new data
+        fetch(`/api/analytics/custom-range?start=${startDate}&end=${endDate}`)
+            .then(response => response.json())
+            .then(data => {
+                // Update charts with new data
+                updateCharts(data);
+            })
+            .catch(error => console.error('Error fetching custom range data:', error));
+    }
+
+    // Function to export data
+    function exportData(format) {
+        window.location.href = `/api/analytics/export?format=${format}`;
+    }
+
+    // Function to change time view (daily, weekly, monthly)
+    function changeTimeView(view) {
+        // This would be an AJAX call to get new data
+        fetch(`/api/analytics/view?type=${view}`)
+            .then(response => response.json())
+            .then(data => {
+                // Update time chart with new data
+                updateTimeChart(data);
+            })
+            .catch(error => console.error('Error fetching view data:', error));
+    }
+
+    // Function to update charts with new data
+    function updateCharts(data) {
+        // This would update all charts with new data
+        console.log('Updating charts with new data:', data);
+    }
+
+    // Function to update time chart with new data
+    function updateTimeChart(data) {
+        // This would update the time chart with new data
+        console.log('Updating time chart with new data:', data);
+    }
+</script>
+{% endblock %}

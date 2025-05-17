@@ -1,0 +1,175 @@
+{% extends 'accounts/base.html' %}
+
+{% block title %}Contact Us - Diabetes Prediction System{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-8 offset-lg-2">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">Contact Us</h3>
+                </div>
+                <div class="card-body">
+                    <p class="lead mb-4">
+                        Have questions about this Diabetes Prediction System? We're here to help! 
+                        Fill out the form below or use our contact information to get in touch with our team.
+                    </p>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-4 mb-md-0">
+                            <h4 class="mb-3">Send us a message</h4>
+                            <form id="contactForm" method="post" action="{% url 'contact' %}">
+                                {% csrf_token %}
+                                <div class="mb-3">
+                                    <label for="name" class="form-label">Your Name</label>
+                                    <input type="text" class="form-control" id="name" name="name" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Email Address</label>
+                                    <input type="email" class="form-control" id="email" name="email" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="subject" class="form-label">Subject</label>
+                                    <input type="text" class="form-control" id="subject" name="subject" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="message" class="form-label">Message</label>
+                                    <textarea class="form-control" id="message" name="message" rows="5" required></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Send Message</button>
+                            </form>
+                            
+                            {% if messages %}
+                                {% for message in messages %}
+                                    <div class="alert alert-{{ message.tags }} mt-3">
+                                        {{ message }}
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <h4 class="mb-3">Contact Information</h4>
+                            <div class="d-flex mb-3">
+                                <div class="me-3">
+                                    <i class="fas fa-map-marker-alt fa-2x text-primary"></i>
+                                </div>
+                                <div>
+                                    <h5>Address</h5>
+                                    <p>164 Vishakawatta<br>Ekala, Ja-Ela<br>Western Province, 11350<br>SriLanka</p>
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex mb-3">
+                                <div class="me-3">
+                                    <i class="fas fa-phone fa-2x text-primary"></i>
+                                </div>
+                                <div>
+                                    <h5>Phone</h5>
+                                    <p>+94 70394 9358</p>
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex mb-3">
+                                <div class="me-3">
+                                    <i class="fas fa-envelope fa-2x text-primary"></i>
+                                </div>
+                                <div>
+                                    <h5>Email</h5>
+                                    <p>contact@diabetesprediction.org</p>
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex mb-3">
+                                <div class="me-3">
+                                    <i class="fas fa-clock fa-2x text-primary"></i>
+                                </div>
+                                <div>
+                                    <h5>Working Hours</h5>
+                                    <p>Monday - Friday: 9:00 AM - 5:00 PM<br>Saturday: 9:00 AM - 1:00 PM<br>Sunday: Closed</p>
+                                </div>
+                            </div>
+                            
+                            <h4 class="mb-3 mt-4">Connect With Us</h4>
+                            <div class="social-links">
+                                <a href="https://fb.com/minusha attygala" class="btn btn-outline-primary me-2"><i class="fab fa-facebook-f"></i></a>
+                                <a href="https://linkedin.com/in/minusha attygala" class="btn btn-outline-primary me-2"><i class="fab fa-linkedin-in"></i></a>
+                                <a href="https://instagram.com/minusha attygala" class="btn btn-outline-primary"><i class="fab fa-instagram"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">Our Location - NSBM Green University</h3>
+                </div>
+                <div class="card-body p-0">
+                    <!-- Google Maps embed of NSBM Green University -->
+                    <div class="ratio ratio-16x9">
+                        <iframe 
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3961.5754688478984!2d80.04179797464387!3d6.820804693176503!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae2523b05555555%3A0x546c34cd99f6f488!2sNSBM%20Green%20University!5e0!3m2!1sen!2slk!4v1715300087895!5m2!1sen!2slk" 
+                            width="100%" 
+                            height="450" 
+                            style="border:0;" 
+                            allowfullscreen="" 
+                            loading="lazy" 
+                            referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                    </div>
+                    <div class="bg-light p-3 text-center">
+                        <h5 class="mb-1">NSBM Green University</h5>
+                        <p class="mb-0">Pitipana - Thalagala Rd, Homagama, Sri Lanka</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Form validation and submission handling
+    document.getElementById('contactForm').addEventListener('submit', function(event) {
+        // In a real application, you might want to add additional client-side validation here
+        
+        // For demonstration purposes, we'll just show a success message
+        // In a real application, this would be handled by the server
+        {% if not messages %}
+            event.preventDefault();
+            alert('Thank you for your message! We will get back to you soon.');
+            this.reset();
+        {% endif %}
+    });
+    
+    // Handle dark mode for Google Maps iframe
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get the current theme
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        const mapContainer = document.querySelector('.card-body.p-0 .bg-light');
+        
+        // Apply appropriate class based on theme
+        if (currentTheme === 'dark') {
+            mapContainer.classList.replace('bg-light', 'bg-dark');
+            mapContainer.classList.add('text-white');
+        }
+        
+        // Listen for theme changes
+        const themeSwitch = document.getElementById('theme-switch');
+        if (themeSwitch) {
+            themeSwitch.addEventListener('click', function() {
+                if (document.body.getAttribute('data-theme') === 'dark') {
+                    mapContainer.classList.replace('bg-dark', 'bg-light');
+                    mapContainer.classList.remove('text-white');
+                } else {
+                    mapContainer.classList.replace('bg-light', 'bg-dark');
+                    mapContainer.classList.add('text-white');
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}

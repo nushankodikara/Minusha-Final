@@ -1,0 +1,821 @@
+{% extends 'accounts/base.html' %}
+
+{% block title %}Your Recommendations - Diabetes Prediction System{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row mb-4">
+        <div class="col-lg-10 offset-lg-1">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h3 class="mb-0">Your Personalized Recommendations</h3>
+                        {% if prediction %}
+                            <span class="badge {% if prediction.prediction %}bg-warning{% else %}bg-success{% endif %} fs-6">
+                                {% if prediction.prediction %}
+                                    High Risk
+                                {% else %}
+                                    Low Risk
+                                {% endif %}
+                            </span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="card-body">
+                    {% if recommendations %}
+                        <p class="lead mb-4">
+                            Based on your prediction results from {{ prediction.created_at|date:"F j, Y" }}, 
+                            we've created the following personalized recommendations to help you 
+                            {% if prediction.prediction %}
+                                manage your diabetes risk factors.
+                            {% else %}
+                                maintain your health and further reduce your diabetes risk.
+                            {% endif %}
+                        </p>
+                        
+                        <!-- Recommendation Navigation -->
+                        <ul class="nav nav-pills mb-4 justify-content-center" id="recommendationTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="diet-tab" data-bs-toggle="pill" data-bs-target="#diet" type="button" role="tab" aria-controls="diet" aria-selected="true">
+                                    <i class="fas fa-utensils me-2"></i>Diet
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="exercise-tab" data-bs-toggle="pill" data-bs-target="#exercise" type="button" role="tab" aria-controls="exercise" aria-selected="false">
+                                    <i class="fas fa-running me-2"></i>Exercise
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="lifestyle-tab" data-bs-toggle="pill" data-bs-target="#lifestyle" type="button" role="tab" aria-controls="lifestyle" aria-selected="false">
+                                    <i class="fas fa-heart me-2"></i>Lifestyle
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="medical-tab" data-bs-toggle="pill" data-bs-target="#medical" type="button" role="tab" aria-controls="medical" aria-selected="false">
+                                    <i class="fas fa-stethoscope me-2"></i>Medical
+                                </button>
+                            </li>
+                        </ul>
+                        
+                        <!-- Recommendation Content -->
+                        <div class="tab-content" id="recommendationTabsContent">
+                            <!-- Diet Recommendations -->
+                            <div class="tab-pane fade show active" id="diet" role="tabpanel" aria-labelledby="diet-tab">
+                                {% for recommendation in recommendations %}
+                                    {% if recommendation.category == 'diet' %}
+                                        <div class="card mb-4 border-0 shadow-sm">
+                                            <div class="card-header bg-light">
+                                                <h4 class="mb-0">{{ recommendation.title }}</h4>
+                                            </div>
+                                            <div class="card-body">
+                                                <p>{{ recommendation.description|linebreaks }}</p>
+                                                
+                                                <h5 class="mt-4 mb-3">Key Diet Principles</h5>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <ul class="list-group mb-3">
+                                                            <li class="list-group-item d-flex align-items-center">
+                                                                <span class="badge bg-success rounded-pill me-2">✓</span>
+                                                                Increase fiber intake (vegetables, fruits, whole grains)
+                                                            </li>
+                                                            <li class="list-group-item d-flex align-items-center">
+                                                                <span class="badge bg-success rounded-pill me-2">✓</span>
+                                                                Choose lean proteins (fish, chicken, legumes)
+                                                            </li>
+                                                            <li class="list-group-item d-flex align-items-center">
+                                                                <span class="badge bg-success rounded-pill me-2">✓</span>
+                                                                Include healthy fats (olive oil, avocados, nuts)
+                                                            </li>
+                                                            <li class="list-group-item d-flex align-items-center">
+                                                                <span class="badge bg-success rounded-pill me-2">✓</span>
+                                                                Stay hydrated with water
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <ul class="list-group mb-3">
+                                                            <li class="list-group-item d-flex align-items-center">
+                                                                <span class="badge bg-danger rounded-pill me-2">✗</span>
+                                                                Limit refined carbohydrates and sugars
+                                                            </li>
+                                                            <li class="list-group-item d-flex align-items-center">
+                                                                <span class="badge bg-danger rounded-pill me-2">✗</span>
+                                                                Reduce processed foods and snacks
+                                                            </li>
+                                                            <li class="list-group-item d-flex align-items-center">
+                                                                <span class="badge bg-danger rounded-pill me-2">✗</span>
+                                                                Avoid sugary beverages
+                                                            </li>
+                                                            <li class="list-group-item d-flex align-items-center">
+                                                                <span class="badge bg-danger rounded-pill me-2">✗</span>
+                                                                Limit alcohol consumption
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                
+                                                <h5 class="mt-4 mb-3">Sample Meal Plan</h5>
+                                                <div class="table-responsive">
+                                                    <table class="table table-bordered">
+                                                        <thead class="table-light">
+                                                            <tr>
+                                                                <th>Meal</th>
+                                                                <th>Options</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td><strong>Breakfast</strong></td>
+                                                                <td>
+                                                                    <ul class="mb-0">
+                                                                        <li>Oatmeal with berries and nuts</li>
+                                                                        <li>Greek yogurt with fruit and seeds</li>
+                                                                        <li>Whole grain toast with avocado and eggs</li>
+                                                                    </ul>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><strong>Lunch</strong></td>
+                                                                <td>
+                                                                    <ul class="mb-0">
+                                                                        <li>Quinoa salad with vegetables and chickpeas</li>
+                                                                        <li>Whole grain wrap with lean protein and vegetables</li>
+                                                                        <li>Lentil soup with a side salad</li>
+                                                                    </ul>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><strong>Dinner</strong></td>
+                                                                <td>
+                                                                    <ul class="mb-0">
+                                                                        <li>Grilled fish with roasted vegetables</li>
+                                                                        <li>Stir-fry with tofu and brown rice</li>
+                                                                        <li>Baked chicken with sweet potato and greens</li>
+                                                                    </ul>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><strong>Snacks</strong></td>
+                                                                <td>
+                                                                    <ul class="mb-0">
+                                                                        <li>Apple with almond butter</li>
+                                                                        <li>Handful of nuts and seeds</li>
+                                                                        <li>Vegetable sticks with hummus</li>
+                                                                    </ul>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <div class="card-footer bg-white">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <button class="btn btn-outline-primary btn-sm" onclick="saveRecommendation('diet')">
+                                                        <i class="fas fa-bookmark me-1"></i> Save
+                                                    </button>
+                                                    <a href="#" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#dietResourcesModal">
+                                                        <i class="fas fa-external-link-alt me-1"></i> Resources
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            
+                            <!-- Exercise Recommendations -->
+                            <div class="tab-pane fade" id="exercise" role="tabpanel" aria-labelledby="exercise-tab">
+                                {% for recommendation in recommendations %}
+                                    {% if recommendation.category == 'exercise' %}
+                                        <div class="card mb-4 border-0 shadow-sm">
+                                            <div class="card-header bg-light">
+                                                <h4 class="mb-0">{{ recommendation.title }}</h4>
+                                            </div>
+                                            <div class="card-body">
+                                                <p>{{ recommendation.description|linebreaks }}</p>
+                                                
+                                                <h5 class="mt-4 mb-3">Weekly Exercise Plan</h5>
+                                                <div class="table-responsive">
+                                                    <table class="table table-bordered">
+                                                        <thead class="table-light">
+                                                            <tr>
+                                                                <th>Day</th>
+                                                                <th>Activity</th>
+                                                                <th>Duration</th>
+                                                                <th>Intensity</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>Monday</td>
+                                                                <td>Walking or Jogging</td>
+                                                                <td>30 minutes</td>
+                                                                <td>Moderate</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Tuesday</td>
+                                                                <td>Strength Training</td>
+                                                                <td>20-30 minutes</td>
+                                                                <td>Moderate</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Wednesday</td>
+                                                                <td>Cycling or Swimming</td>
+                                                                <td>30 minutes</td>
+                                                                <td>Moderate</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Thursday</td>
+                                                                <td>Rest or Gentle Yoga</td>
+                                                                <td>20 minutes</td>
+                                                                <td>Low</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Friday</td>
+                                                                <td>Brisk Walking</td>
+                                                                <td>30 minutes</td>
+                                                                <td>Moderate</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Saturday</td>
+                                                                <td>Strength Training</td>
+                                                                <td>20-30 minutes</td>
+                                                                <td>Moderate</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Sunday</td>
+                                                                <td>Active Rest (e.g., Leisurely Walk)</td>
+                                                                <td>30+ minutes</td>
+                                                                <td>Low</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                
+                                                <div class="row mt-4">
+                                                    <div class="col-md-6">
+                                                        <h5 class="mb-3">Beginner Exercises</h5>
+                                                        <ul class="list-group mb-3">
+                                                            <li class="list-group-item">Walking</li>
+                                                            <li class="list-group-item">Swimming</li>
+                                                            <li class="list-group-item">Cycling</li>
+                                                            <li class="list-group-item">Gentle Yoga</li>
+                                                            <li class="list-group-item">Light Resistance Training</li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <h5 class="mb-3">Exercise Tips</h5>
+                                                        <ul class="list-group mb-3">
+                                                            <li class="list-group-item">Start slowly and gradually increase intensity</li>
+                                                            <li class="list-group-item">Stay hydrated before, during, and after exercise</li>
+                                                            <li class="list-group-item">Wear appropriate footwear and clothing</li>
+                                                            <li class="list-group-item">Monitor blood glucose if you have diabetes</li>
+                                                            <li class="list-group-item">Consult a healthcare provider before starting a new exercise program</li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-footer bg-white">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <button class="btn btn-outline-primary btn-sm" onclick="saveRecommendation('exercise')">
+                                                        <i class="fas fa-bookmark me-1"></i> Save
+                                                    </button>
+                                                    <a href="#" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#exerciseResourcesModal">
+                                                        <i class="fas fa-external-link-alt me-1"></i> Resources
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            
+                            <!-- Lifestyle Recommendations -->
+                            <div class="tab-pane fade" id="lifestyle" role="tabpanel" aria-labelledby="lifestyle-tab">
+                                {% for recommendation in recommendations %}
+                                    {% if recommendation.category == 'lifestyle' %}
+                                        <div class="card mb-4 border-0 shadow-sm">
+                                            <div class="card-header bg-light">
+                                                <h4 class="mb-0">{{ recommendation.title }}</h4>
+                                            </div>
+                                            <div class="card-body">
+                                                <p>{{ recommendation.description|linebreaks }}</p>
+                                                
+                                                <div class="row mt-4">
+                                                    <div class="col-md-6 mb-4">
+                                                        <div class="card h-100 border-primary">
+                                                            <div class="card-header bg-primary text-white">
+                                                                <h5 class="mb-0">Stress Management</h5>
+                                                            </div>
+                                                            <div class="card-body">
+                                                                <ul class="list-unstyled">
+                                                                    <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Practice deep breathing exercises daily</li>
+                                                                    <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Try meditation or mindfulness for 10-15 minutes</li>
+                                                                    <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Engage in activities you enjoy</li>
+                                                                    <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Connect with supportive friends and family</li>
+                                                                    <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Consider professional support if needed</li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6 mb-4">
+                                                        <div class="card h-100 border-info">
+                                                            <div class="card-header bg-info text-white">
+                                                                <h5 class="mb-0">Sleep Hygiene</h5>
+                                                            </div>
+                                                            <div class="card-body">
+                                                                <ul class="list-unstyled">
+                                                                    <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Aim for 7-9 hours of quality sleep each night</li>
+                                                                    <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Maintain a consistent sleep schedule</li>
+                                                                    <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Create a relaxing bedtime routine</li>
+                                                                    <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Limit screen time before bed</li>
+                                                                    <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Keep your bedroom cool, dark, and quiet</li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6 mb-4">
+                                                        <div class="card h-100 border-warning">
+                                                            <div class="card-header bg-warning text-white">
+                                                                <h5 class="mb-0">Habits to Avoid</h5>
+                                                            </div>
+                                                            <div class="card-body">
+                                                                <ul class="list-unstyled">
+                                                                    <li class="mb-2"><i class="fas fa-times-circle text-danger me-2"></i> Smoking and tobacco use</li>
+                                                                    <li class="mb-2"><i class="fas fa-times-circle text-danger me-2"></i> Excessive alcohol consumption</li>
+                                                                    <li class="mb-2"><i class="fas fa-times-circle text-danger me-2"></i> Prolonged sedentary behavior</li>
+                                                                    <li class="mb-2"><i class="fas fa-times-circle text-danger me-2"></i> Skipping meals</li>
+                                                                    <li class="mb-2"><i class="fas fa-times-circle text-danger me-2"></i> Ignoring medical advice</li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6 mb-4">
+                                                        <div class="card h-100 border-success">
+                                                            <div class="card-header bg-success text-white">
+                                                                <h5 class="mb-0">Daily Routine</h5>
+                                                            </div>
+                                                            <div class="card-body">
+                                                                <ul class="list-unstyled">
+                                                                    <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Establish regular meal times</li>
+                                                                    <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Take short breaks during prolonged sitting</li>
+                                                                    <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Stay hydrated throughout the day</li>
+                                                                    <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Schedule time for physical activity</li>
+                                                                    <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Practice gratitude or journaling</li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-footer bg-white">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <button class="btn btn-outline-primary btn-sm" onclick="saveRecommendation('lifestyle')">
+                                                        <i class="fas fa-bookmark me-1"></i> Save
+                                                    </button>
+                                                    <a href="#" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#lifestyleResourcesModal">
+                                                        <i class="fas fa-external-link-alt me-1"></i> Resources
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            
+                            <!-- Medical Recommendations -->
+                            <div class="tab-pane fade" id="medical" role="tabpanel" aria-labelledby="medical-tab">
+                                {% for recommendation in recommendations %}
+                                    {% if recommendation.category == 'medical' %}
+                                        <div class="card mb-4 border-0 shadow-sm">
+                                            <div class="card-header bg-light">
+                                                <h4 class="mb-0">{{ recommendation.title }}</h4>
+                                            </div>
+                                            <div class="card-body">
+                                                <p>{{ recommendation.description|linebreaks }}</p>
+                                                
+                                                <div class="alert alert-info mt-4" role="alert">
+                                                    <h5 class="alert-heading"><i class="fas fa-info-circle me-2"></i>Important Note</h5>
+                                                    <p class="mb-0">These recommendations are for informational purposes only and do not replace professional medical advice. Always consult with your healthcare provider before making any changes to your healthcare routine.</p>
+                                                </div>
+                                                
+                                                <h5 class="mt-4 mb-3">Recommended Health Screenings</h5>
+                                                <div class="table-responsive">
+                                                    <table class="table table-bordered">
+                                                        <thead class="table-light">
+                                                            <tr>
+                                                                <th>Screening</th>
+                                                                <th>Frequency</th>
+                                                                <th>Purpose</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>Blood Glucose Test</td>
+                                                                <td>Annually</td>
+                                                                <td>Monitors blood sugar levels to detect prediabetes or diabetes</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>HbA1c Test</td>
+                                                                <td>Every 6-12 months</td>
+                                                                <td>Measures average blood glucose levels over the past 2-3 months</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Blood Pressure Check</td>
+                                                                <td>Every 6 months</td>
+                                                                <td>Monitors for hypertension, a common comorbidity with diabetes</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Cholesterol Panel</td>
+                                                                <td>Annually</td>
+                                                                <td>Assesses cardiovascular risk factors</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Eye Examination</td>
+                                                                <td>Annually</td>
+                                                                <td>Screens for diabetic retinopathy and other eye conditions</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Foot Examination</td>
+                                                                <td>Annually</td>
+                                                                <td>Checks for neuropathy and circulation issues</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Kidney Function Tests</td>
+                                                                <td>Annually</td>
+                                                                <td>Monitors for diabetic nephropathy</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                
+                                                <h5 class="mt-4 mb-3">Health Tracking</h5>
+                                                <div class="row">
+                                                    <div class="col-md-6 mb-3">
+                                                        <div class="card h-100">
+                                                            <div class="card-body">
+                                                                <h6 class="card-title">What to Track</h6>
+                                                                <ul>
+                                                                    <li>Blood glucose levels (if recommended)</li>
+                                                                    <li>Blood pressure</li>
+                                                                    <li>Weight</li>
+                                                                    <li>Physical activity</li>
+                                                                    <li>Diet and nutrition</li>
+                                                                    <li>Sleep patterns</li>
+                                                                    <li>Medication adherence (if applicable)</li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6 mb-3">
+                                                        <div class="card h-100">
+                                                            <div class="card-body">
+                                                                <h6 class="card-title">Tracking Methods</h6>
+                                                                <ul>
+                                                                    <li>Health journals or diaries</li>
+                                                                    <li>Mobile health apps</li>
+                                                                    <li>Wearable devices</li>
+                                                                    <li>Blood glucose monitors (if recommended)</li>
+                                                                    <li>Home blood pressure monitors</li>
+                                                                    <li>Regular check-ins with healthcare providers</li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-footer bg-white">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <button class="btn btn-outline-primary btn-sm" onclick="saveRecommendation('medical')">
+                                                        <i class="fas fa-bookmark me-1"></i> Save
+                                                    </button>
+                                                    <a href="#" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#medicalResourcesModal">
+                                                        <i class="fas fa-external-link-alt me-1"></i> Resources
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        
+                        <!-- Action Plan -->
+                        <div class="card mt-5 border-primary">
+                            <div class="card-header bg-primary text-white">
+                                <h4 class="mb-0">Your Action Plan</h4>
+                            </div>
+                            <div class="card-body">
+                                <p class="lead">Based on your recommendations, here are some key actions to consider:</p>
+                                
+                                <div class="row">
+                                    <div class="col-md-6 mb-4">
+                                        <div class="card h-100">
+                                            <div class="card-header bg-light">
+                                                <h5 class="mb-0">Short-Term Goals (1-3 months)</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="form-check mb-2">
+                                                    <input class="form-check-input" type="checkbox" id="goal1">
+                                                    <label class="form-check-label" for="goal1">
+                                                        Schedule a check-up with your healthcare provider
+                                                    </label>
+                                                </div>
+                                                <div class="form-check mb-2">
+                                                    <input class="form-check-input" type="checkbox" id="goal2">
+                                                    <label class="form-check-label" for="goal2">
+                                                        Start a daily walking routine (15-30 minutes)
+                                                    </label>
+                                                </div>
+                                                <div class="form-check mb-2">
+                                                    <input class="form-check-input" type="checkbox" id="goal3">
+                                                    <label class="form-check-label" for="goal3">
+                                                        Reduce sugary beverage consumption
+                                                    </label>
+                                                </div>
+                                                <div class="form-check mb-2">
+                                                    <input class="form-check-input" type="checkbox" id="goal4">
+                                                    <label class="form-check-label" for="goal4">
+                                                        Implement a stress management technique daily
+                                                    </label>
+                                                </div>
+                                                <div class="form-check mb-2">
+                                                    <input class="form-check-input" type="checkbox" id="goal5">
+                                                    <label class="form-check-label" for="goal5">
+                                                        Track your food intake for two weeks
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-4">
+                                        <div class="card h-100">
+                                            <div class="card-header bg-light">
+                                                <h5 class="mb-0">Long-Term Goals (3-12 months)</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="form-check mb-2">
+                                                    <input class="form-check-input" type="checkbox" id="longGoal1">
+                                                    <label class="form-check-label" for="longGoal1">
+                                                        Achieve and maintain a healthy weight
+                                                    </label>
+                                                </div>
+                                                <div class="form-check mb-2">
+                                                    <input class="form-check-input" type="checkbox" id="longGoal2">
+                                                    <label class="form-check-label" for="longGoal2">
+                                                        Establish a consistent exercise routine (150+ minutes/week)
+                                                    </label>
+                                                </div>
+                                                <div class="form-check mb-2">
+                                                    <input class="form-check-input" type="checkbox" id="longGoal3">
+                                                    <label class="form-check-label" for="longGoal3">
+                                                        Improve sleep quality and duration
+                                                    </label>
+                                                </div>
+                                                <div class="form-check mb-2">
+                                                    <input class="form-check-input" type="checkbox" id="longGoal4">
+                                                    <label class="form-check-label" for="longGoal4">
+                                                        Complete all recommended health screenings
+                                                    </label>
+                                                </div>
+                                                <div class="form-check mb-2">
+                                                    <input class="form-check-input" type="checkbox" id="longGoal5">
+                                                    <label class="form-check-label" for="longGoal5">
+                                                        Maintain healthy blood glucose levels
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-3">
+                                    <button class="btn btn-primary" id="addCustomGoalBtn">
+                                        <i class="fas fa-plus-circle me-1"></i> Add Custom Goal
+                                    </button>
+                                </div>
+                                
+                                <div class="mt-4 d-none" id="customGoalForm">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Add Custom Goal</h5>
+                                            <div class="mb-3">
+                                                <label for="goalDescription" class="form-label">Goal Description</label>
+                                                <input type="text" class="form-control" id="goalDescription" placeholder="Enter your goal">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="goalTimeframe" class="form-label">Timeframe</label>
+                                                <select class="form-select" id="goalTimeframe">
+                                                    <option value="short">Short-term (1-3 months)</option>
+                                                    <option value="long">Long-term (3-12 months)</option>
+                                                </select>
+                                            </div>
+                                            <div class="d-flex justify-content-end">
+                                                <button class="btn btn-secondary me-2" id="cancelCustomGoalBtn">Cancel</button>
+                                                <button class="btn btn-primary" id="saveCustomGoalBtn">Save Goal</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Progress Tracking -->
+                        <div class="card mt-4">
+                            <div class="card-header bg-light">
+                                <h4 class="mb-0">Track Your Progress</h4>
+                            </div>
+                            <div class="card-body">
+                                <p>Regularly monitoring your progress can help you stay motivated and make adjustments as needed.</p>
+                                
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Next Steps</h5>
+                                                <ul class="list-group list-group-flush">
+                                                    <li class="list-group-item">Schedule your next health check-up</li>
+                                                    <li class="list-group-item">Upload your latest sugar report</li>
+                                                    <li class="list-group-item">Take another prediction test in 3 months</li>
+                                                    <li class="list-group-item">Join our community support group</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Helpful Resources</h5>
+                                                <ul class="list-group list-group-flush">
+                                                    <li class="list-group-item"><a href="#" class="text-decoration-none">Diabetes Prevention Guide</a></li>
+                                                    <li class="list-group-item"><a href="#" class="text-decoration-none">Healthy Recipes Collection</a></li>
+                                                    <li class="list-group-item"><a href="#" class="text-decoration-none">Exercise Videos for Beginners</a></li>
+                                                    <li class="list-group-item"><a href="#" class="text-decoration-none">Stress Management Techniques</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info" role="alert">
+                            <h4 class="alert-heading">No recommendations available</h4>
+                            <p>You don't have any recommendations yet. Please complete a prediction to receive personalized recommendations.</p>
+                            <hr>
+                            <p class="mb-0">
+                                <a href="{% url 'prediction_form' %}" class="btn btn-primary">Take Prediction Test</a>
+                            </p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Resource Modals -->
+<!-- Diet Resources Modal -->
+<div class="modal fade" id="dietResourcesModal" tabindex="-1" aria-labelledby="dietResourcesModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="dietResourcesModalLabel">Diet Resources</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h6>Recommended Reading</h6>
+                <ul>
+                    <li><a href="#" target="_blank">American Diabetes Association - Nutrition Guidelines</a></li>
+                    <li><a href="#" target="_blank">Mediterranean Diet for Diabetes Prevention</a></li>
+                    <li><a href="#" target="_blank">Understanding Glycemic Index and Load</a></li>
+                    <li><a href="#" target="_blank">Meal Planning for Diabetes Prevention</a></li>
+                </ul>
+                
+                <h6 class="mt-4">Helpful Apps</h6>
+                <ul>
+                    <li>MyFitnessPal - Food tracking and nutrition analysis</li>
+                    <li>Fooducate - Grocery scanner and healthy food finder</li>
+                    <li>Diabetes:M - Diabetes management and food tracking</li>
+                    <li>Plate Planner - Visual meal planning tool</li>
+                </ul>
+                
+                <h6 class="mt-4">Video Resources</h6>
+                <ul>
+                    <li><a href="#" target="_blank">Diabetes-Friendly Cooking Techniques</a></li>
+                    <li><a href="#" target="_blank">Understanding Food Labels for Diabetes Prevention</a></li>
+                    <li><a href="#" target="_blank">Meal Prep Basics for Healthy Eating</a></li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Exercise Resources Modal -->
+<div class="modal fade" id="exerciseResourcesModal" tabindex="-1" aria-labelledby="exerciseResourcesModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exerciseResourcesModalLabel">Exercise Resources</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h6>Recommended Reading</h6>
+                <ul>
+                    <li><a href="#" target="_blank">Physical Activity Guidelines for Diabetes Prevention</a></li>
+                    <li><a href="#" target="_blank">Exercise Safety Tips for Beginners</a></li>
+                    <li><a href="#" target="_blank">Strength Training Basics</a></li>
+                    <li><a href="#" target="_blank">Finding the Right Exercise Routine</a></li>
+                </ul>
+                
+                <h6 class="mt-4">Helpful Apps</h6>
+                <ul>
+                    <li>Strava - Track walking, running, and cycling</li>
+                    <li>Nike Training Club - Guided workouts for all levels</li>
+                    <li>7 Minute Workout - Quick, effective exercise routines</li>
+                    <li>MapMyWalk - Walking routes and tracking</li>
+                </ul>
+                
+                <h6 class="mt-4">Video Resources</h6>
+                <ul>
+                    <li><a href="#" target="_blank">Beginner Walking Program</a></li>
+                    <li><a href="#" target="_blank">Low-Impact Exercises for Diabetes Prevention</a></li>
+                    <li><a href="#" target="_blank">Strength Training with Household Items</a></li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Other modals for lifestyle and medical resources would follow the same pattern -->
+
+{% block extra_js %}
+<script>
+    // Toggle custom goal form
+    document.getElementById('addCustomGoalBtn').addEventListener('click', function() {
+        document.getElementById('customGoalForm').classList.remove('d-none');
+        this.classList.add('d-none');
+    });
+    
+    document.getElementById('cancelCustomGoalBtn').addEventListener('click', function() {
+        document.getElementById('customGoalForm').classList.add('d-none');
+        document.getElementById('addCustomGoalBtn').classList.remove('d-none');
+    });
+    
+    // Save custom goal
+    document.getElementById('saveCustomGoalBtn').addEventListener('click', function() {
+        const goalDescription = document.getElementById('goalDescription').value;
+        const goalTimeframe = document.getElementById('goalTimeframe').value;
+        
+        if (goalDescription.trim() === '') {
+            alert('Please enter a goal description');
+            return;
+        }
+        
+        // Create new goal checkbox
+        const newGoal = document.createElement('div');
+        newGoal.className = 'form-check mb-2';
+        
+        const checkbox = document.createElement('input');
+        checkbox.className = 'form-check-input';
+        checkbox.type = 'checkbox';
+        checkbox.id = 'customGoal' + Date.now();
+        
+        const label = document.createElement('label');
+        label.className = 'form-check-label';
+        label.htmlFor = checkbox.id;
+        label.textContent = goalDescription;
+        
+        newGoal.appendChild(checkbox);
+        newGoal.appendChild(label);
+        
+        // Add to appropriate section
+        if (goalTimeframe === 'short') {
+            document.querySelector('.card-header:contains("Short-Term Goals")').nextElementSibling.appendChild(newGoal);
+        } else {
+            document.querySelector('.card-header:contains("Long-Term Goals")').nextElementSibling.appendChild(newGoal);
+        }
+        
+        // Reset form
+        document.getElementById('goalDescription').value = '';
+        document.getElementById('customGoalForm').classList.add('d-none');
+        document.getElementById('addCustomGoalBtn').classList.remove('d-none');
+        
+        // Show success message
+        alert('Custom goal added successfully!');
+    });
+    
+    // Function to save recommendation
+    function saveRecommendation(category) {
+        // In a real application, this would save to the database
+        alert(`${category.charAt(0).toUpperCase() + category.slice(1)} recommendations saved!`);
+    }
+</script>
+{% endblock %}
+{% endblock %}

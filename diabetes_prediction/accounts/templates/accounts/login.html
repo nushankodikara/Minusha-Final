@@ -1,0 +1,154 @@
+{% extends 'accounts/base.html' %}
+
+{% block title %}Login - Diabetes Prediction System{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-6 offset-lg-3">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">Login</h3>
+                </div>
+                <div class="card-body p-4">
+                    <!-- Login Form -->
+                    <form method="post" action="{% url 'login' %}">
+                        {% csrf_token %}
+                        
+                        {% if error_message %}
+                            <div class="alert alert-danger" role="alert">
+                                {{ error_message }}
+                            </div>
+                        {% endif %}
+                        
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="alert alert-{{ message.tags }}" role="alert">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                        
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                <input type="text" class="form-control" id="username" name="username" required autofocus>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                <input type="password" class="form-control" id="password" name="password" required>
+                                <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="remember" name="remember">
+                                <label class="form-check-label" for="remember">
+                                    Remember me
+                                </label>
+                            </div>
+                            <div>
+                                <a href="{% url 'password_reset' %}" class="text-decoration-none">Forgot password?</a>
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-sign-in-alt me-2"></i>Login
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <!-- Divider -->
+                    <div class="d-flex align-items-center my-4">
+                        <div class="border-bottom flex-grow-1"></div>
+                        <div class="px-3 text-muted">or</div>
+                        <div class="border-bottom flex-grow-1"></div>
+                    </div>
+                    
+                    <!-- Social Login -->
+                    <div class="d-grid gap-2 mb-4">
+                        <button type="button" class="btn btn-outline-primary">
+                            <i class="fab fa-google me-2"></i>Continue with Google
+                        </button>
+                        <button type="button" class="btn btn-outline-primary">
+                            <i class="fab fa-facebook-f me-2"></i>Continue with Facebook
+                        </button>
+                    </div>
+                    
+                    <!-- Registration Link -->
+                    <div class="text-center">
+                        <p class="mb-0">Don't have an account? <a href="{% url 'register' %}" class="text-decoration-none">Register here</a></p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Information Card -->
+            <div class="card mt-4 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-info-circle text-primary me-2"></i>Why Create an Account?
+                    </h5>
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Save your prediction results</li>
+                        <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Track your health progress over time</li>
+                        <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Receive personalized recommendations</li>
+                        <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Upload and analyze medical reports</li>
+                        <li><i class="fas fa-check-circle text-success me-2"></i>Access exclusive health resources</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Toggle password visibility
+    document.getElementById('togglePassword').addEventListener('click', function() {
+        const passwordInput = document.getElementById('password');
+        const icon = this.querySelector('i');
+        
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        } else {
+            passwordInput.type = 'password';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
+    });
+    
+    // Form validation
+    document.querySelector('form').addEventListener('submit', function(event) {
+        const username = document.getElementById('username').value.trim();
+        const password = document.getElementById('password').value;
+        
+        if (username === '') {
+            event.preventDefault();
+            alert('Please enter your username or email');
+            document.getElementById('username').focus();
+            return false;
+        }
+        
+        if (password === '') {
+            event.preventDefault();
+            alert('Please enter your password');
+            document.getElementById('password').focus();
+            return false;
+        }
+        
+        return true;
+    });
+</script>
+{% endblock %}

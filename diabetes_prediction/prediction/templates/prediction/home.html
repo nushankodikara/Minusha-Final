@@ -1,0 +1,139 @@
+{% extends 'accounts/base.html' %}
+
+{% block title %}Home - Diabetes Prediction System{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container text-center">
+        <h1 class="display-4 fw-bold mb-3">Diabetes Prediction System</h1>
+        <p class="lead mb-4">Welcome to our Machine Learning-based Diabetes Prediction System. Predict your diabetes risk on external factors like gender, height, weight, age, and exercise habits.</p>
+        <div class="d-flex justify-content-center gap-3">
+            <a href="{% url 'prediction_form' %}" class="btn btn-light btn-lg px-4 py-2">
+                <i class="fas fa-clipboard-check me-2"></i>Check Your Status
+            </a>
+            <a href="{% url 'about' %}" class="btn btn-outline-light btn-lg px-4 py-2">
+                <i class="fas fa-info-circle me-2"></i>Learn More
+            </a>
+        </div>
+    </div>
+</section>
+
+<div class="container">
+    <!-- Features Section -->
+    <section class="mb-5">
+        <h2 class="text-center mb-4">How It Works</h2>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <i class="fas fa-user-edit fa-3x text-primary"></i>
+                        </div>
+                        <h5 class="card-title">Fill the Form</h5>
+                        <p class="card-text">Provide your basic information like gender, age, height, weight, and exercise habits.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <i class="fas fa-brain fa-3x text-primary"></i>
+                        </div>
+                        <h5 class="card-title">AI Analysis</h5>
+                        <p class="card-text">Our machine learning model analyzes your data to predict diabetes risk.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <i class="fas fa-clipboard-list fa-3x text-primary"></i>
+                        </div>
+                        <h5 class="card-title">Get Results</h5>
+                        <p class="card-text">Receive your prediction results and personalized recommendations.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="text-center mb-5">
+        <div class="card bg-light">
+            <div class="card-body py-5">
+                <h2 class="mb-3">Ready to Check Your Diabetes Risk?</h2>
+                <p class="lead mb-4">Our system uses machine learning to analyze external factors and predict your diabetes risk.</p>
+                <div class="d-grid gap-2 col-md-6 mx-auto">
+                    <a href="{% url 'prediction_form' %}" class="btn btn-primary btn-lg">
+                        <i class="fas fa-clipboard-check me-2"></i>Check Your Status Now
+                    </a>
+                    <a href="{% url 'upload_report' %}" class="btn btn-outline-primary">
+                        <i class="fas fa-file-upload me-2"></i>Upload Sugar Report
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="mb-5">
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h3 class="card-title text-center mb-4">Why Use Our System?</h3>
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <div class="text-center">
+                                <i class="fas fa-chart-line fa-3x mb-3 text-primary"></i>
+                                <h5>Early Detection</h5>
+                                <p>Identify your risk factors early to prevent complications</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="text-center">
+                                <i class="fas fa-user-md fa-3x mb-3 text-primary"></i>
+                                <h5>Personalized Advice</h5>
+                                <p>Get recommendations tailored to your specific health profile</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="text-center">
+                                <i class="fas fa-shield-alt fa-3x mb-3 text-primary"></i>
+                                <h5>Privacy Focused</h5>
+                                <p>Your health data is secure and confidential</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </section>
+
+    <!-- Information Section -->
+    <section class="mb-5">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-4 mb-lg-0">
+                <h2>Why Early Detection Matters</h2>
+                <p>Diabetes is a chronic disease that affects millions of people worldwide. Early detection can help prevent complications and improve quality of life.</p>
+                <p>Our system uses machine learning to analyze external factors like:</p>
+                <ul class="list-group list-group-flush mb-4">
+                    <li class="list-group-item"><i class="fas fa-venus-mars text-primary me-2"></i> Gender</li>
+                    <li class="list-group-item"><i class="fas fa-ruler-vertical text-primary me-2"></i> Height</li>
+                    <li class="list-group-item"><i class="fas fa-weight text-primary me-2"></i> Weight</li>
+                    <li class="list-group-item"><i class="fas fa-birthday-cake text-primary me-2"></i> Age</li>
+                    <li class="list-group-item"><i class="fas fa-running text-primary me-2"></i> Exercise Habits</li>
+                </ul>
+                <p>Based on these factors, we calculate your BMI and predict your diabetes risk.</p>
+                <a href="{% url 'about' %}" class="btn btn-outline-primary">Learn More About Our System</a>
+            </div>
+            <div class="col-lg-6">
+                <img src="https://as2.ftcdn.net/jpg/02/91/03/25/1000_F_291032573_zJBsQFOQyYPZlYj4UhQvlKkKnDlhsSRi.jpg" alt="Diabetes Prevention" class="img-fluid rounded shadow">
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

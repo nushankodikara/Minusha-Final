@@ -1,0 +1,364 @@
+{% extends 'accounts/base.html' %}
+
+{% block title %}About Us - Diabetes Prediction System{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Hero Section -->
+    <div class="row mb-5">
+        <div class="col-lg-8 offset-lg-2 text-center">
+            <h1 class="display-4 mb-3">About Diabetes Prediction System</h1>
+            <p class="lead">
+                Using advanced machine learning algorithms to help predict diabetes risk and provide personalized recommendations.
+            </p>
+        </div>
+    </div>
+    
+    <!-- Overview Section -->
+    <div class="row mb-5">
+        <div class="col-lg-10 offset-lg-1">
+            <div class="card shadow">
+                <div class="card-body p-5">
+                    <h2 class="card-title mb-4">Mission</h2>
+                    <p class="card-text">
+                        The Diabetes Prediction System is designed to help individuals assess their risk of developing diabetes 
+                        based on various health and lifestyle factors. Our mission is to leverage technology and data science 
+                        to provide early detection tools that can help prevent or manage diabetes effectively.
+                    </p>
+                    <p class="card-text">
+                        Diabetes is a chronic health condition that affects how your body turns food into energy. According to the 
+                        International Diabetes Federation, over 463 million adults were living with diabetes in 2019, and this number 
+                        is projected to rise to 700 million by 2045. Early detection and intervention can significantly reduce the 
+                        risk of complications and improve quality of life.
+                    </p>
+                    <p class="card-text">
+                        This system uses machine learning algorithms trained on extensive datasets to predict diabetes risk with 
+                        high accuracy. By analyzing factors such as age, gender, BMI, exercise habits, and other health indicators, 
+                        we can provide a personalized risk assessment and tailored recommendations.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- How It Works Section -->
+    <div class="row mb-5">
+        <div class="col-lg-10 offset-lg-1">
+            <h2 class="text-center mb-4">How This System Works</h2>
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body text-center">
+                            <div class="mb-3">
+                                <i class="fas fa-user-edit fa-3x text-primary"></i>
+                            </div>
+                            <h4 class="card-title">1. Input Your Data</h4>
+                            <p class="card-text">
+                                Provide basic information about your health and lifestyle through our simple questionnaire.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body text-center">
+                            <div class="mb-3">
+                                <i class="fas fa-brain fa-3x text-primary"></i>
+                            </div>
+                            <h4 class="card-title">2. AI Analysis</h4>
+                            <p class="card-text">
+                                Our machine learning algorithms analyze your data to assess your diabetes risk.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body text-center">
+                            <div class="mb-3">
+                                <i class="fas fa-clipboard-list fa-3x text-primary"></i>
+                            </div>
+                            <h4 class="card-title">3. Get Results</h4>
+                            <p class="card-text">
+                                Receive your personalized risk assessment and tailored recommendations.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Technology Section -->
+    <div class="row mb-5">
+        <div class="col-lg-10 offset-lg-1">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">Technology</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h4 class="mb-3">Machine Learning Models</h4>
+                            <p>
+                                This system employs several state-of-the-art machine learning algorithms, including:
+                            </p>
+                            <ul>
+                                <li><strong>XGBoost</strong> - A gradient boosting framework known for its performance and speed</li>
+                                <li><strong>Random Forest</strong> - An ensemble learning method for classification and regression</li>
+                                <li><strong>Logistic Regression</strong> - A statistical model for binary classification problems</li>
+                            </ul>
+                            <p>
+                                These models are trained on extensive datasets and continuously improved to ensure high accuracy in predictions.
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <h4 class="mb-3">Data Processing</h4>
+                            <p>
+                                This system processes various types of data to make accurate predictions:
+                            </p>
+                            <ul>
+                                <li><strong>Demographic Information</strong> - Age, gender, and other personal factors</li>
+                                <li><strong>Physical Measurements</strong> - Height, weight, BMI, and other health metrics</li>
+                                <li><strong>Lifestyle Factors</strong> - Exercise habits, diet, and daily activities</li>
+                                <li><strong>Medical Reports</strong> - Blood glucose levels, HbA1c, and other medical data</li>
+                            </ul>
+                            <p>
+                                Use advanced OCR technology to extract data from uploaded medical reports, making it easier for users to provide accurate information.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Team Section -->
+    <div class="row mb-5">
+        <div class="col-lg-10 offset-lg-1">
+            <h2 class="text-center mb-4">Team</h2>
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body text-center">
+                            <div class="mb-3">
+                                <img src="/placeholder.svg?height=150&width=150" class="rounded-circle" alt="Team Member" width="150" height="150">
+                            </div>
+                            <h4 class="card-title">Mrs. Nethmi Weerasinghe</h4>
+                            <p class="text-muted">Lecturer at NSBM</p>
+                            <p class="card-text">
+                                Endocrinologist with over 15 years of experience in diabetes care and research.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body text-center">
+                            <div class="mb-3">
+                                <img src="/placeholder.svg?height=150&width=150" class="rounded-circle" alt="Team Member" width="150" height="150">
+                            </div>
+                            <h4 class="card-title">Minusha Attygala</h4>
+                            <p class="text-muted">Data Science Undergraduate</p>
+                            <p class="card-text">
+                                Expert in machine learning with a focus on healthcare applications and predictive modeling.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- FAQ Section -->
+    <div class="row mb-5">
+        <div class="col-lg-10 offset-lg-1">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">Frequently Asked Questions</h3>
+                </div>
+                <div class="card-body">
+                    <div class="accordion" id="faqAccordion">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingOne">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                    How accurate is the diabetes prediction?
+                                </button>
+                            </h2>
+                            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Our prediction model has been trained on extensive datasets and achieves an accuracy of approximately 85-90%. However, it's important to note that this is a screening tool and not a diagnostic test. Always consult with a healthcare professional for proper diagnosis and treatment.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingTwo">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                    Is my health data secure?
+                                </button>
+                            </h2>
+                            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Yes, we take data security very seriously. All personal health information is encrypted and stored securely. We comply with relevant data protection regulations and never share your information with third parties without your explicit consent.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingThree">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                    Can I use this system if I already have diabetes?
+                                </button>
+                            </h2>
+                            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Yes, while our system is primarily designed for risk assessment, it can also provide valuable recommendations for individuals who already have diabetes. The personalized recommendations can help with managing the condition effectively.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingFour">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                                    How often should I use the prediction system?
+                                </button>
+                            </h2>
+                            <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    For general health monitoring, we recommend using the system once every 3-6 months. If you're making significant lifestyle changes or have been identified as high risk, more frequent assessments (every 1-3 months) may be beneficial to track your progress.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingFive">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                                    What datasets were used to train the model?
+                                </button>
+                            </h2>
+                            <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Our model was trained using several publicly available datasets, including the Diabetes Health Indicators Dataset, which contains over 250,000 patient records, and the Pima Indians Diabetes Database. These datasets include a wide range of demographic, health, and lifestyle factors that are relevant to diabetes risk assessment.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Project Timeline -->
+    <div class="row">
+        <div class="col-lg-10 offset-lg-1">
+            <h2 class="text-center mb-4">Project Timeline</h2>
+            <div class="card shadow">
+                <div class="card-body">
+                    <div class="timeline">
+                        <div class="row g-0">
+                            <div class="col-sm-3 text-center">
+                                <div class="timeline-date">
+                                    <h5>January 2023</h5>
+                                </div>
+                            </div>
+                            <div class="col-sm-9">
+                                <div class="timeline-content">
+                                    <h5>Project Inception</h5>
+                                    <p>Initial research and project planning began with a focus on diabetes prediction using machine learning.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row g-0">
+                            <div class="col-sm-3 text-center">
+                                <div class="timeline-date">
+                                    <h5>March 2023</h5>
+                                </div>
+                            </div>
+                            <div class="col-sm-9">
+                                <div class="timeline-content">
+                                    <h5>Data Collection & Model Development</h5>
+                                    <p>Gathered datasets and began developing the initial machine learning models for diabetes prediction.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row g-0">
+                            <div class="col-sm-3 text-center">
+                                <div class="timeline-date">
+                                    <h5>June 2023</h5>
+                                </div>
+                            </div>
+                            <div class="col-sm-9">
+                                <div class="timeline-content">
+                                    <h5>System Architecture Design</h5>
+                                    <p>Designed the web application architecture and user interface for the prediction system.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row g-0">
+                            <div class="col-sm-3 text-center">
+                                <div class="timeline-date">
+                                    <h5>September 2023</h5>
+                                </div>
+                            </div>
+                            <div class="col-sm-9">
+                                <div class="timeline-content">
+                                    <h5>Beta Testing</h5>
+                                    <p>Launched beta version of the system for testing with a limited user group and healthcare professionals.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row g-0">
+                            <div class="col-sm-3 text-center">
+                                <div class="timeline-date">
+                                    <h5>January 2024</h5>
+                                </div>
+                            </div>
+                            <div class="col-sm-9">
+                                <div class="timeline-content">
+                                    <h5>Official Launch</h5>
+                                    <p>Officially launched the Diabetes Prediction System to the public with enhanced features and improved accuracy.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row g-0">
+                            <div class="col-sm-3 text-center">
+                                <div class="timeline-date">
+                                    <h5>Ongoing</h5>
+                                </div>
+                            </div>
+                            <div class="col-sm-9">
+                                <div class="timeline-content">
+                                    <h5>Continuous Improvement</h5>
+                                    <p>Regularly updating the system with new features, improved models, and enhanced user experience based on feedback.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .timeline-date {
+        padding: 20px;
+        font-weight: bold;
+        color: #0d6efd;
+    }
+    
+    .timeline-content {
+        padding: 20px;
+        border-left: 3px solid #0d6efd;
+    }
+    
+    @media (max-width: 576px) {
+        .timeline-content {
+            border-left: none;
+            border-top: 3px solid #0d6efd;
+        }
+    }
+</style>
+{% endblock %}

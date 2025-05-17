@@ -1,0 +1,142 @@
+{% extends 'accounts/base.html' %}
+
+{% block title %}FAQ - Diabetes Prediction System{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-10 offset-lg-1">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">Frequently Asked Questions</h3>
+                </div>
+                <div class="card-body p-4">
+                    <div class="accordion" id="faqAccordion">
+                        <!-- Question 1 -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingOne">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                    What is the Diabetes Prediction System?
+                                </button>
+                            </h2>
+                            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    <p>
+                                        The Diabetes Prediction System is an advanced tool that uses machine learning algorithms to assess your risk of developing diabetes based on various health factors, lifestyle choices, and medical history. It provides personalized recommendations to help you manage and reduce your risk.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Question 2 -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingTwo">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                    How accurate is the prediction?
+                                </button>
+                            </h2>
+                            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    <p>
+                                        Our prediction model has been trained on a large dataset and has an accuracy of approximately 85-90%. However, it's important to note that this is not a medical diagnosis. The prediction is based on statistical analysis and should be used as a screening tool only. Always consult with a healthcare professional for proper diagnosis and treatment.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Question 3 -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingThree">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                    Is my health information secure?
+                                </button>
+                            </h2>
+                            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    <p>
+                                        Yes, we take data security very seriously. All your personal and health information is encrypted and stored securely. We comply with relevant data protection regulations and never share your information with third parties without your explicit consent. For more details, please review our Privacy Policy.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Question 4 -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingFour">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                                    Do I need to create an account to use the system?
+                                </button>
+                            </h2>
+                            <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    <p>
+                                        While you can get a basic prediction without an account, creating an account allows you to:
+                                    </p>
+                                    <ul>
+                                        <li>Save your prediction results</li>
+                                        <li>Track your health progress over time</li>
+                                        <li>Receive personalized recommendations</li>
+                                        <li>Upload and analyze medical reports</li>
+                                        <li>Access exclusive health resources</li>
+                                    </ul>
+                                    <p>
+                                        We recommend creating an account for the best experience.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Question 5 -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingFive">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                                    How often should I check my diabetes risk?
+                                </button>
+                            </h2>
+                            <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    <p>
+                                        For most people, checking your diabetes risk once every 6-12 months is sufficient. However, if you've made significant lifestyle changes or have been diagnosed with prediabetes, you might want to check more frequently (every 3-6 months) to monitor your progress. Always follow the advice of your healthcare provider regarding the frequency of health assessments.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Question 6 -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingSix">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
+                                    What should I do if my prediction shows a high risk?
+                                </button>
+                            </h2>
+                            <div id="collapseSix" class="accordion-collapse collapse" aria-labelledby="headingSix" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    <p>
+                                        If your prediction indicates a high risk of diabetes, we recommend:
+                                    </p>
+                                    <ol>
+                                        <li>Consult with a healthcare professional as soon as possible</li>
+                                        <li>Review the personalized recommendations provided by our system</li>
+                                        <li>Consider lifestyle modifications such as improved diet and increased physical activity</li>
+                                        <li>Monitor your blood glucose levels regularly if advised by your doctor</li>
+                                        <li>Follow up with regular health check-ups</li>
+                                    </ol>
+                                    <p>
+                                        Remember, early intervention can significantly reduce your risk of developing diabetes.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <p>
+                            Don't see your question here? <a href="{% url 'contact' %}">Contact us</a> and we'll be happy to help.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

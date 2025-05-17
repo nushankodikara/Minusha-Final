@@ -1,0 +1,354 @@
+{% extends 'accounts/base.html' %}
+
+{% block title %}Register - Diabetes Prediction System{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-8 offset-lg-2">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">Create an Account</h3>
+                </div>
+                <div class="card-body p-4">
+                    <!-- Registration Form -->
+                    <form method="post" action="{% url 'register' %}" id="registrationForm">
+                        {% csrf_token %}
+                        
+                        {% if form.errors %}
+                            <div class="alert alert-danger">
+                                <strong>There were errors in your form:</strong>
+                                <ul class="mb-0">
+                                    {% for field, errors in form.errors.items %}
+                                        {% for error in errors %}
+                                            <li>{{ field }}: {{ error }}</li>
+                                        {% endfor %}
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% endif %}
+                        
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="alert alert-{{ message.tags }}" role="alert">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                        
+                        <div class="row">
+                            <!-- Personal Information -->
+                            <div class="col-md-6">
+                                <h5 class="mb-3">Personal Information</h5>
+                                
+                                <div class="mb-3">
+                                    <label for="first_name" class="form-label">First Name</label>
+                                    <input type="text" class="form-control" id="first_name" name="first_name" required>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="last_name" class="form-label">Last Name</label>
+                                    <input type="text" class="form-control" id="last_name" name="last_name" required>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="date_of_birth" class="form-label">Date of Birth</label>
+                                    <input type="date" class="form-control" id="date_of_birth" name="date_of_birth">
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label">Gender</label>
+                                    <div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="gender" id="gender_male" value="male">
+                                            <label class="form-check-label" for="gender_male">Male</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="gender" id="gender_female" value="female">
+                                            <label class="form-check-label" for="gender_female">Female</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="gender" id="gender_other" value="other">
+                                            <label class="form-check-label" for="gender_other">Other</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Account Information -->
+                            <div class="col-md-6">
+                                <h5 class="mb-3">Account Information</h5>
+                                
+                                <div class="mb-3">
+                                    <label for="username" class="form-label">Username</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                        <input type="text" class="form-control" id="username" name="username" required>
+                                    </div>
+                                    <div class="form-text">Choose a unique username (letters, numbers, and underscores only)</div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Email Address</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                        <input type="email" class="form-control" id="email" name="email" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="password1" class="form-label">Password</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                        <input type="password" class="form-control" id="password1" name="password1" required>
+                                        <button class="btn btn-outline-secondary" type="button" id="togglePassword1">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
+                                    <div class="form-text">
+                                        <ul class="mb-0 ps-3 small">
+                                            <li>At least 8 characters long</li>
+                                            <li>Contains at least one uppercase letter</li>
+                                            <li>Contains at least one number</li>
+                                            <li>Cannot be entirely numeric</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="password2" class="form-label">Confirm Password</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                        <input type="password" class="form-control" id="password2" name="password2" required>
+                                        <button class="btn btn-outline-secondary" type="button" id="togglePassword2">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Additional Information -->
+                        <div class="mt-4">
+                            <h5 class="mb-3">Health Information (Optional)</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="height" class="form-label">Height (cm)</label>
+                                        <input type="number" class="form-control" id="height" name="height" min="50" max="250">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="weight" class="form-label">Weight (kg)</label>
+                                        <input type="number" class="form-control" id="weight" name="weight" min="20" max="300">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Do you have a family history of diabetes?</label>
+                                <div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="family_diabetes" id="family_diabetes_yes" value="yes">
+                                        <label class="form-check-label" for="family_diabetes_yes">Yes</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="family_diabetes" id="family_diabetes_no" value="no">
+                                        <label class="form-check-label" for="family_diabetes_no">No</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="family_diabetes" id="family_diabetes_unknown" value="unknown" checked>
+                                        <label class="form-check-label" for="family_diabetes_unknown">Unknown</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Terms and Privacy -->
+                        <div class="mt-4">
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" id="terms" name="terms" required>
+                                <label class="form-check-label" for="terms">
+                                    I agree to the <a href="{% url 'terms' %}" target="_blank">Terms and Conditions</a> and <a href="{% url 'privacy' %}" target="_blank">Privacy Policy</a>
+                                </label>
+                            </div>
+                            
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" id="newsletter" name="newsletter">
+                                <label class="form-check-label" for="newsletter">
+                                    I would like to receive updates and newsletters about diabetes prevention
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-user-plus me-2"></i>Create Account
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <!-- Divider -->
+                    <div class="d-flex align-items-center my-4">
+                        <div class="border-bottom flex-grow-1"></div>
+                        <div class="px-3 text-muted">or</div>
+                        <div class="border-bottom flex-grow-1"></div>
+                    </div>
+                    
+                    <!-- Social Registration -->
+                    <div class="d-grid gap-2 mb-4">
+                        <button type="button" class="btn btn-outline-primary">
+                            <i class="fab fa-google me-2"></i>Register with Google
+                        </button>
+                        <button type="button" class="btn btn-outline-primary">
+                            <i class="fab fa-facebook-f me-2"></i>Register with Facebook
+                        </button>
+                    </div>
+                    
+                    <!-- Login Link -->
+                    <div class="text-center">
+                        <p class="mb-0">Already have an account? <a href="{% url 'login' %}" class="text-decoration-none">Login here</a></p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Information Card -->
+            <div class="card mt-4 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-shield-alt text-primary me-2"></i>Your Privacy Matters
+                    </h5>
+                    <p class="card-text">
+                        We take your privacy seriously. Your personal and health information is encrypted and securely stored. 
+                        We will never share your information with third parties without your explicit consent.
+                    </p>
+                    <p class="card-text mb-0">
+                        Learn more about how we protect your data in our <a href="{% url 'privacy' %}" target="_blank">Privacy Policy</a>.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Toggle password visibility
+    document.getElementById('togglePassword1').addEventListener('click', function() {
+        const passwordInput = document.getElementById('password1');
+        const icon = this.querySelector('i');
+        
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        } else {
+            passwordInput.type = 'password';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
+    });
+    
+    document.getElementById('togglePassword2').addEventListener('click', function() {
+        const passwordInput = document.getElementById('password2');
+        const icon = this.querySelector('i');
+        
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        } else {
+            passwordInput.type = 'password';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
+    });
+    
+    // Form validation
+    document.getElementById('registrationForm').addEventListener('submit', function(event) {
+        const username = document.getElementById('username').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const password1 = document.getElementById('password1').value;
+        const password2 = document.getElementById('password2').value;
+        const terms = document.getElementById('terms').checked;
+        
+        let isValid = true;
+        let errorMessage = '';
+        
+        // Username validation
+        if (username === '') {
+            isValid = false;
+            errorMessage += 'Username is required.\n';
+        } else if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+            isValid = false;
+            errorMessage += 'Username can only contain letters, numbers, and underscores.\n';
+        }
+        
+        // Email validation
+        if (email === '') {
+            isValid = false;
+            errorMessage += 'Email is required.\n';
+        } else if (!/\S+@\S+\.\S+/.test(email)) {
+            isValid = false;
+            errorMessage += 'Please enter a valid email address.\n';
+        }
+        
+        // Password validation
+        if (password1 === '') {
+            isValid = false;
+            errorMessage += 'Password is required.\n';
+        } else if (password1.length < 8) {
+            isValid = false;
+            errorMessage += 'Password must be at least 8 characters long.\n';
+        } else if (!/[A-Z]/.test(password1)) {
+            isValid = false;
+            errorMessage += 'Password must contain at least one uppercase letter.\n';
+        } else if (!/[0-9]/.test(password1)) {
+            isValid = false;
+            errorMessage += 'Password must contain at least one number.\n';
+        } else if (/^\d+$/.test(password1)) {
+            isValid = false;
+            errorMessage += 'Password cannot be entirely numeric.\n';
+        }
+        
+        // Password confirmation
+        if (password1 !== password2) {
+            isValid = false;
+            errorMessage += 'Passwords do not match.\n';
+        }
+        
+        // Terms agreement
+        if (!terms) {
+            isValid = false;
+            errorMessage += 'You must agree to the Terms and Conditions and Privacy Policy.\n';
+        }
+        
+        if (!isValid) {
+            event.preventDefault();
+            alert('Please correct the following errors:\n\n' + errorMessage);
+            return false;
+        }
+        
+        return true;
+    });
+    
+    // Calculate BMI when height and weight are entered
+    function calculateBMI() {
+        const height = document.getElementById('height').value;
+        const weight = document.getElementById('weight').value;
+        
+        if (height && weight) {
+            const heightInMeters = height / 100;
+            const bmi = (weight / (heightInMeters * heightInMeters)).toFixed(1);
+            
+            // You could display this BMI value somewhere on the form if desired
+            console.log('BMI:', bmi);
+        }
+    }
+    
+    document.getElementById('height').addEventListener('change', calculateBMI);
+    document.getElementById('weight').addEventListener('change', calculateBMI);
+</script>
+{% endblock %}
