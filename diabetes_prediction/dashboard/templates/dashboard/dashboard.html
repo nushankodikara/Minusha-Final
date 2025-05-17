@@ -109,7 +109,7 @@
             <p class="text-muted mb-0">Monitor your health metrics and track your progress</p>
         </div>
         <div class="d-flex gap-2">
-            <a href="{% url 'upload_meal' %}" class="btn btn-light dashboard-action-btn">
+            <a href="{% url 'upload_report' %}" class="btn btn-light dashboard-action-btn">
                 <i class="bi bi-cloud-arrow-up"></i> Upload Data
             </a>
             <a href="{% url 'prediction_form' %}" class="btn btn-primary dashboard-action-btn">
@@ -367,7 +367,7 @@
                                 <path d="M8 11a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5zm0 1a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM3 6.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0z"/>
                             </svg>
                             <p class="text-muted">No meal photos uploaded yet.</p>
-                            <a href="{% url 'upload_meal' %}" class="btn btn-primary btn-sm">Upload Meal</a>
+                            <a href="{% url 'upload_report' %}" class="btn btn-primary btn-sm">Upload Meal</a>
                         </div>
                     {% endif %}
                 </div>
@@ -429,7 +429,7 @@
                                 <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z"/>
                             </svg>
                             <p class="text-muted">No sugar reports uploaded yet.</p>
-                            <a href="{% url 'upload_sugar_report' %}" class="btn btn-primary btn-sm">Upload Report</a>
+                            <a href="{% url 'upload_report' %}" class="btn btn-primary btn-sm">Upload Report</a>
                         </div>
                     {% endif %}
                 </div>

@@ -282,14 +282,14 @@ def delete_sugar_report(request, report_id):
 
 @login_required
 def dashboard(request):
-    # Get recent predictions
-    recent_predictions = Prediction.objects.filter(user=request.user).order_by('-created_at')[:5]
+    # Get recent predictions from PredictionResult model
+    recent_predictions = PredictionResult.objects.filter(user=request.user).order_by('-created_at')[:5]
     
-    # Get total predictions count
-    total_predictions = Prediction.objects.filter(user=request.user).count()
+    # Get total predictions count from PredictionResult model
+    total_predictions = PredictionResult.objects.filter(user=request.user).count()
     
-    # Get positive predictions count
-    positive_predictions = Prediction.objects.filter(user=request.user, outcome=True).count()
+    # Get positive predictions count from PredictionResult model (where prediction is True)
+    positive_predictions = PredictionResult.objects.filter(user=request.user, prediction=True).count()
     
     context = {
         'recent_predictions': recent_predictions,
